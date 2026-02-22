@@ -1,6 +1,6 @@
 # pi-ext-review
 
-A [pi](https://github.com/mariozechner/pi-coding-agent) extension that generates structured, narrated walkthroughs of code changes with an interactive TUI.
+A [pi](https://github.com/badlogic/pi-mono) extension that generates structured, narrated walkthroughs of code changes with an interactive TUI.
 
 ## Features
 
@@ -9,52 +9,58 @@ A [pi](https://github.com/mariozechner/pi-coding-agent) extension that generates
 - **`/review` command** - Reopens past reviews from session history
 - **Text mode** - Optional markdown output directly in chat (`mode: "text"`)
 - **Streaming** - Real-time progress as the narrator generates the review
+- **Review skill** - Teaches the agent when and how to invoke the review tool
 
 ## Installation
 
-### With Nix flakes
+### Quick install
 
-Add as a flake input:
-
-```nix
-# flake.nix
-inputs.pi-ext-review = {
-  url = "github:Karrq/pi-ext-review";
-  flake = false;
-};
+```bash
+pi install git:github.com/Karrq/pi-ext-review
 ```
 
-Then in your pi configuration:
+### Try without installing
 
-```nix
-review = {
-  src = inputs.pi-ext-review;
-  installScript = ''
-    mkdir -p "$out/agents"
-    for f in "$src"/agents/*.md; do
-      ln -sfn "$f" "$out/agents/$(basename "$f")"
-    done
-
-    mkdir -p "$out/extensions/review"
-    for f in "$src"/*.ts; do
-      ln -sfn "$f" "$out/extensions/review/$(basename "$f")"
-    done
-
-    mkdir -p "$out/skills"
-    if [ -d "$src/skills" ]; then
-      for d in "$src"/skills/*; do
-        if [ -d "$d" ]; then
-          ln -sfn "$d" "$out/skills/$(basename "$d")"
-        fi
-      done
-    fi
-  '';
-};
+```bash
+pi -e git:github.com/Karrq/pi-ext-review
 ```
+
+### Project-local install
+
+```bash
+pi install -l git:github.com/Karrq/pi-ext-review
+```
+
+This writes to `.pi/settings.json` so the extension is shared with your team.
 
 ### Manual
 
-Copy the extension files into your pi extensions directory and ensure the `agents/` and `skills/` subdirectories are symlinked to the appropriate locations.
+Clone or copy the repo into your pi extensions directory:
+
+```
+~/.pi/agent/extensions/review/    # global
+.pi/extensions/review/             # project-local
+```
+
+## Usage
+
+### As a tool (LLM-invoked)
+
+The agent can call the `review` tool after completing work. The included skill teaches it when and how.
+
+### As a command
+
+```
+/review          # reopen a past review from session history
+```
+
+### Text mode
+
+If you prefer inline markdown instead of the TUI:
+
+```
+review "Describe the auth refactor" --mode text
+```
 
 ## TUI Navigation
 
@@ -68,15 +74,6 @@ Copy the extension files into your pi extensions directory and ensure the `agent
 - `h`/`l` - horizontal scroll (code zone)
 - `esc` - back to summary
 - `q` - close
-
-## Dependencies
-
-All dependencies are pi built-ins (no npm install needed):
-
-- `@mariozechner/pi-coding-agent`
-- `@mariozechner/pi-ai`
-- `@mariozechner/pi-tui`
-- `@sinclair/typebox`
 
 ## License
 

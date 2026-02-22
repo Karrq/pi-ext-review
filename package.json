@@ -1,0 +1,21 @@
+{
+  "name": "pi-ext-review",
+  "version": "0.1.0",
+  "description": "Structured narrated walkthroughs of code changes with interactive TUI for pi",
+  "keywords": ["pi-package"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Karrq/pi-ext-review"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-tui": "*",
+    "@sinclair/typebox": "*"
+  },
+  "pi": {
+    "extensions": ["./index.ts"],
+    "skills": ["./skills"]
+  }
+}
